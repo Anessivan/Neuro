@@ -3,6 +3,8 @@
 #include "Ensemble.h"
 #include <iostream>
 
+#define SIGMA 1.0
+
 Ensemble::Ensemble(std::vector<Neuron> vector)
 {
 	connection = vector;
@@ -29,9 +31,9 @@ void Ensemble::doTic(double dt)
 			phase = connection[i].getNewPhase();
 			if (i != j)
 				if (i < j)
-					phase += (gateFunc() * connectionFunc(j) * dt);
+					phase += (gateFunc() * connectionFuncDown(j) * dt);
 				else
-					phase += (gateFunc() * connectionFunc(j) * dt);
+					phase += (gateFunc() * connectionFuncUp(j) * dt);
 			//while (phase > 2 * M_PI)
 				//phase -= 2 * M_PI;
 			connection[i].setNewPhase(phase);
@@ -48,9 +50,9 @@ double Ensemble::der(int number)
 		 {
 			 if (number != j)
 				 if (number < j)
-					 res += (gateFunc() * connectionFunc(j));
+					 res += (gateFunc() * connectionFuncDown(j));
 				 else
-					 res += (gateFunc() * connectionFunc(j));
+					 res += (gateFunc() * connectionFuncUp(j));
 		 }
 	return res;
 }
@@ -60,14 +62,27 @@ double gateFunc()
 	return 1.0;
 }
 
-double Ensemble::connectionFunc(int number)
+double Ensemble::connectionFuncDown(int number)
 {
-	double sigma = 0.5;
+
 	//std::cout << asin(connection[number].getParam()) << " " << connection[number].getNewPhase() << std::endl;
 	double phase = connection[number].getNewPhase();
 	while (phase > 2 * M_PI)
 		phase -= 2 * M_PI;
-	if (((asin(connection[number].getParam()) - sigma) < phase) && ((asin(connection[number].getParam()) + sigma) > (phase)))
+	if (((asin(connection[number].getParam()) - SIGMA) < phase) && ((asin(connection[number].getParam()) + SIGMA) > (phase)))
+		return 0.0;
+	else 
+		return 1.0;
+}
+
+
+double Ensemble::connectionFuncUp(int number)
+{
+	//std::cout << asin(connection[number].getParam()) << " " << connection[number].getNewPhase() << std::endl;
+	double phase = connection[number].getPhase();
+	while (phase > 2 * M_PI)
+		phase -= 2 * M_PI;
+	if (((asin(connection[number].getParam()) - SIGMA) < phase) && ((asin(connection[number].getParam()) + SIGMA) > (phase)))
 		return 0.0;
 	else 
 		return 1.0;

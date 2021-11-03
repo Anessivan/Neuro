@@ -13,11 +13,13 @@ public:
 	Ensemble(std::vector<Neuron> vector);
 	Ensemble();
 	void addConnection(Neuron& newNeuron);
-	void doTic(double dt);// если сила связи одинакова для всех, то добавить умножение в форик. Если нет - думать.
+	void doTic(double dt);
 
 	double der(int number);
 
-	double connectionFunc(int number);
+	double connectionFuncDown(int number);
+
+	double connectionFuncUp(int number);
 };
 
 double gateFunc();
