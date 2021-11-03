@@ -56,5 +56,5 @@ double Neuron::doTic(double dt)
 
 double func(double w, double phase)
 {
-	return w + sin(phase);
+	return w - sin(phase);
 }
