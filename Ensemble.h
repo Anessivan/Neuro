@@ -16,7 +16,8 @@ public:
 	void doTic(double dt);// если сила связи одинакова для всех, то добавить умножение в форик. Если нет - думать.
 
 	double der(int number);
+
+	double connectionFunc(int number);
 };
 
 double gateFunc();
-double connectionFunc(double phase);

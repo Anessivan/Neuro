@@ -48,8 +48,8 @@ double Neuron::doTic(double dt)
 {
 	phase = phaseNew;
 	phaseNew += func(w, phaseNew) * dt;
-	while (phaseNew > 2 * M_PI)
-		phaseNew -= 2 * M_PI;
+	//while (phaseNew > 2 * M_PI)
+	//	phaseNew -= 2 * M_PI;
 	return phaseNew;
 }
 

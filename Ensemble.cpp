@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "Ensemble.h"
+#include <iostream>
 
 Ensemble::Ensemble(std::vector<Neuron> vector)
 {
@@ -28,11 +29,11 @@ void Ensemble::doTic(double dt)
 			phase = connection[i].getNewPhase();
 			if (i != j)
 				if (i < j)
-					phase += (gateFunc() * connectionFunc(connection[j].getNewPhase())) * dt;
+					phase += (gateFunc() * connectionFunc(j) * dt);
 				else
-					phase += (gateFunc() * connectionFunc(connection[j].getPhase())) * dt;
-			while (phase > 2 * M_PI)
-				phase -= 2 * M_PI;
+					phase += (gateFunc() * connectionFunc(j) * dt);
+			//while (phase > 2 * M_PI)
+				//phase -= 2 * M_PI;
 			connection[i].setNewPhase(phase);
 		}
 	}
@@ -47,9 +48,9 @@ double Ensemble::der(int number)
 		 {
 			 if (number != j)
 				 if (number < j)
-					 res += (gateFunc() * connectionFunc(connection[j].getPhase()));
+					 res += (gateFunc() * connectionFunc(j));
 				 else
-					 res += (gateFunc() * connectionFunc(connection[j].getNewPhase()));
+					 res += (gateFunc() * connectionFunc(j));
 		 }
 	return res;
 }
@@ -59,9 +60,15 @@ double gateFunc()
 	return 1.0;
 }
 
-double connectionFunc(double phase)
+double Ensemble::connectionFunc(int number)
 {
-	if (fabs(M_PI - phase) < 1)
+	double sigma = 0.5;
+	//std::cout << asin(connection[number].getParam()) << " " << connection[number].getNewPhase() << std::endl;
+	double phase = connection[number].getNewPhase();
+	while (phase > 2 * M_PI)
+		phase -= 2 * M_PI;
+	if (((asin(connection[number].getParam()) - sigma) < phase) && ((asin(connection[number].getParam()) + sigma) > (phase)))
+		return 0.0;
+	else 
 		return 1.0;
-	else return 0.0;
 }

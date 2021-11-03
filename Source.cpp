@@ -9,8 +9,8 @@
 
 void main()
 {
-	Neuron n1;
-	Neuron n2(M_PI / 2, 2);
+	Neuron n1(0, 0.9);
+	Neuron n2(0, 0.98);
 	Ensemble ens1;
 
 	ens1.addConnection(n1);
