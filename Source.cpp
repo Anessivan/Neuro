@@ -25,6 +25,6 @@ void main()
 	for (double time = 0; time < 10; time += dt)
 	{
 		ens1.doTic(dt);
-		outf << time << " " << ens1.connection[0].getNewPhase() << " " << ens1.connection[1].getNewPhase() << std::endl;
+		outf << time << " " << ens1.connection[0].getNewPhase() << " " << ens1.der(0)<< " " << ens1.connection[1].getNewPhase() << " " << ens1.der(1) << std::endl;
 	}
 }

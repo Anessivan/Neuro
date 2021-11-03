@@ -13,6 +13,8 @@ public:
 	Ensemble();
 	void addConnection(Neuron& newNeuron);
 	void doTic(double dt);// если сила связи одинакова для всех, то добавить умножение в форик. Если нет - думать.
+
+	double der(int number);
 };
 
 double gateFunc();

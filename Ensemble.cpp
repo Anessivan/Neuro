@@ -26,9 +26,9 @@ void Ensemble::doTic(double dt)
 			phase = connection[i].getNewPhase();
 			if (i != j)
 				if (i < j)
-					phase += gateFunc() * connectionFunc(connection[i].getPhase());
+					phase += (gateFunc() * connectionFunc(connection[j].getPhase())) * dt;
 				else
-					phase += gateFunc() * connectionFunc(connection[i].getNewPhase());
+					phase += (gateFunc() * connectionFunc(connection[j].getNewPhase())) * dt;
 			while (phase > 2 * M_PI)
 				phase -= 2 * M_PI;
 			connection[i].setNewPhase(phase);
@@ -36,9 +36,25 @@ void Ensemble::doTic(double dt)
 	}
 }
 
+double Ensemble::der(int number)
+{
+	double res = 0;
+	//if (number < connection.size())
+		 res += func(connection[number].getParam(), connection[number].getNewPhase());
+		 for (int j = 0; j < connection.size(); j++)
+		 {
+			 if (number != j)
+				 if (number < j)
+					 res += (gateFunc() * connectionFunc(connection[j].getPhase()));
+				 else
+					 res += (gateFunc() * connectionFunc(connection[j].getNewPhase()));
+		 }
+	return res;
+}
+
 double gateFunc()
 {
-	return 1;
+	return 0.4;
 }
 
 double connectionFunc(double phase)
