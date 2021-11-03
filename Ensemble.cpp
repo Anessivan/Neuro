@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "Ensemble.h"
 
 Ensemble::Ensemble(std::vector<Neuron> vector)
@@ -26,9 +28,9 @@ void Ensemble::doTic(double dt)
 			phase = connection[i].getNewPhase();
 			if (i != j)
 				if (i < j)
-					phase += (gateFunc() * connectionFunc(connection[j].getPhase())) * dt;
-				else
 					phase += (gateFunc() * connectionFunc(connection[j].getNewPhase())) * dt;
+				else
+					phase += (gateFunc() * connectionFunc(connection[j].getPhase())) * dt;
 			while (phase > 2 * M_PI)
 				phase -= 2 * M_PI;
 			connection[i].setNewPhase(phase);
@@ -54,10 +56,12 @@ double Ensemble::der(int number)
 
 double gateFunc()
 {
-	return 0.4;
+	return 1.0;
 }
 
 double connectionFunc(double phase)
 {
-	return phase;
+	if (fabs(M_PI - phase) < 1)
+		return 1.0;
+	else return 0.0;
 }
