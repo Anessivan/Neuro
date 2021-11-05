@@ -9,9 +9,11 @@ class Ensemble
 {
 public:
 	std::vector<Neuron> connection;
+	double d;
+	double sigma;
 
-	Ensemble(std::vector<Neuron> vector);
-	Ensemble();
+	Ensemble(std::vector<Neuron> vector, double, double);
+	Ensemble(double, double);
 	void addConnection(Neuron& newNeuron);
 	void doTic(double dt);
 

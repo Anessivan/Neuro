@@ -3,16 +3,18 @@
 #include "Ensemble.h"
 #include <iostream>
 
-#define SIGMA 1.0
 
-Ensemble::Ensemble(std::vector<Neuron> vector)
+Ensemble::Ensemble(std::vector<Neuron> vector, double _d, double _sigma)
 {
 	connection = vector;
+	d = _d;
+	sigma = _sigma;
 }
 
-Ensemble::Ensemble()
+Ensemble::Ensemble(double _d, double _sigma)
 {
-
+	d = _d;
+	sigma = _sigma;
 }
 
 void Ensemble::addConnection(Neuron& newNeuron)
@@ -31,9 +33,9 @@ void Ensemble::doTic(double dt)
 			phase = connection[i].getNewPhase();
 			if (i != j)
 				if (i < j)
-					phase += (gateFunc() * connectionFuncDown(j) * dt);
+					phase -= (d * connectionFuncDown(j) * dt);
 				else
-					phase += (gateFunc() * connectionFuncUp(j) * dt);
+					phase -= (d * connectionFuncUp(j) * dt);
 			//while (phase > 2 * M_PI)
 				//phase -= 2 * M_PI;
 			connection[i].setNewPhase(phase);
@@ -50,17 +52,17 @@ double Ensemble::der(int number)
 		 {
 			 if (number != j)
 				 if (number < j)
-					 res += (gateFunc() * connectionFuncDown(j));
+					 res -= (d * connectionFuncDown(j));
 				 else
-					 res += (gateFunc() * connectionFuncUp(j));
+					 res -= (d * connectionFuncUp(j));
 		 }
 	return res;
 }
 
-double gateFunc()
-{
-	return 1.0;
-}
+// double gateFunc()
+// {
+// 	return d;
+// }
 
 double Ensemble::connectionFuncDown(int number)
 {
@@ -69,7 +71,8 @@ double Ensemble::connectionFuncDown(int number)
 	double phase = connection[number].getNewPhase();
 	while (phase > 2 * M_PI)
 		phase -= 2 * M_PI;
-	if (((asin(connection[number].getParam()) - SIGMA) < phase) && ((asin(connection[number].getParam()) + SIGMA) > (phase)))
+	// if (((asin(connection[number].getParam()) - sigma) < phase) && ((asin(connection[number].getParam()) + sigma) > (phase)))
+	if (((M_PI / 2 - sigma) <= phase) && ((M_PI / 2 + sigma) >= phase))
 		return 0.0;
 	else 
 		return 1.0;
@@ -82,7 +85,8 @@ double Ensemble::connectionFuncUp(int number)
 	double phase = connection[number].getPhase();
 	while (phase > 2 * M_PI)
 		phase -= 2 * M_PI;
-	if (((asin(connection[number].getParam()) - SIGMA) < phase) && ((asin(connection[number].getParam()) + SIGMA) > (phase)))
+	//if (((asin(connection[number].getParam()) - sigma) < phase) && ((asin(connection[number].getParam()) + sigma) > (phase)))
+	if (((M_PI / 2 - sigma) <= phase) && ((M_PI / 2 + sigma) >= phase))
 		return 0.0;
 	else 
 		return 1.0;
