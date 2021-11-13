@@ -23,3 +23,27 @@ public:
 };
 
 double gateFunc();
+
+
+class Ensemble_cycle
+{
+private:
+	std::vector<Neuron> Neurons;
+
+public:
+	Ensemble_cycle(std::vector<Neuron> vector);
+	Ensemble_cycle();
+
+	void addNeuron(Neuron add, size_t size = Neurons.size());
+
+	double NeuronPhase(int number);
+
+	void doTic(double dt);
+
+	double connectionFuncDown(int number);
+
+	double connectionFuncUp(int number);
+
+	//double der(int number);
+
+}
