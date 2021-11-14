@@ -5,45 +5,30 @@
 #include "Neuron.h"
 #include <vector>
 
+
 class Ensemble
 {
-public:
-	std::vector<Neuron> connection;
-
-	Ensemble(std::vector<Neuron> vector);
-	Ensemble();
-	void addConnection(Neuron& newNeuron);
-	void doTic(double dt);
-
-	double der(int number);
-
-	double connectionFuncDown(int number);
-
-	double connectionFuncUp(int number);
-};
-
-double gateFunc();
-
-
-class Ensemble_cycle
-{
 private:
-	std::vector<Neuron> Neurons;
+
+	std::vector<Neuron> neurons;
+
+	std::vector<std::pair< size_t, size_t> > connection;
+
+	double sigma;
+
+	double d;
 
 public:
-	Ensemble_cycle(std::vector<Neuron> vector);
-	Ensemble_cycle();
 
-	void addNeuron(Neuron add, size_t size = Neurons.size());
-
-	double NeuronPhase(int number);
+	Ensemble(double sigma = 0, double d = 0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>());
 
 	void doTic(double dt);
 
-	double connectionFuncDown(int number);
+	void addConnection(std::pair<size_t, size_t>);
+	void addConnection(size_t number_in, size_t number_out);
 
-	double connectionFuncUp(int number);
 
-	//double der(int number);
+	double connectionFunction(siae_t pos_in, size_t pos_out);
 
-}
+
+};
