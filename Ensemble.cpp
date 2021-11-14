@@ -25,7 +25,7 @@ std::vector<double> Ensemble::doTic(double dt)
 			{
 				double phase = neurons[i].getNewPhase();
 				phase -= d * connectionFunction(j) * dt;
-				neuron[i].setNewPhase(phase);
+				neurons[i].setNewPhase(phase);
 			}
 		res.push_back(neurons[i].getNewPhase());
 	}
@@ -48,10 +48,10 @@ void  Ensemble::addConnection(size_t number_in, size_t number_out)
 
 double Ensemble::connectionFunction(size_t connection_number)
 {
-	double phase = Neurons[connection[connection_number].second].getNewPhase();
+	double phase = neurons[connection[connection_number].second].getNewPhase();
 	while(phase > 2 * M_PI)
 		phase -= 2 * M_PI;
-	double out_neuron_w = Neurons[connection[connection_number].second].getParam();
+	double out_neuron_w = neurons[connection[connection_number].second].getParam();
 	if((asin(out_neuron_w - sigma) < phase) && (asin(out_neuron_w + sigma) > phase))
 		return 0.0;
 	else
