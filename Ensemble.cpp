@@ -19,12 +19,12 @@ std::vector<double> Ensemble::doTic(double dt)
 
 	for(int i = 0; i < neurons.size(); i++)
 	{
-		neurons[i].doTic();
+		neurons[i].doTic(dt);
 		for (int j = 0; j < connection.size(); j++)
 			if(connection[j].first == i)
 			{
 				double phase = neurons[i].getNewPhase();
-				phase -= d * connectionFunction(connection[j].second) * dt;
+				phase -= d * connectionFunction(j) * dt;
 				neuron[i].setNewPhase(phase);
 			}
 		res.push_back(neurons[i].getNewPhase());
