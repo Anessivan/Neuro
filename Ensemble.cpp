@@ -5,7 +5,7 @@
 #include <algorithm>
 
 
-Ensemble::Ensemble(double _sigma = 0, double _d = 0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>())
+Ensemble::Ensemble(double _sigma = 0.0, double _d = 0.0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>())
 {
 	neurons = v;
 	connection = connect;
@@ -40,7 +40,7 @@ void Ensemble::addConnection(std::pair<size_t, size_t> add)
 
 void  Ensemble::addConnection(size_t number_in, size_t number_out)
 {
-	std::pair<std::pair<size_t, size_t>, int> added(number_in, number_out);
+	std::pair<size_t, size_t> added(number_in, number_out);
 	addConnection(added);
 }
 
