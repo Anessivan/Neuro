@@ -12,7 +12,7 @@ private:
 	double phase;
 	double w;
 public:
-	Neuron(double phase_start = 0.0, double param = 0.95);
+	Neuron(double phase_start = 0.0, double param = 1);
 	Neuron(const Neuron& copy);
 	double getPhase();
 	void setPhase(double setedPhase);

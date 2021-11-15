@@ -2,92 +2,63 @@
 #include <cmath>
 #include "Ensemble.h"
 #include <iostream>
+#include <algorithm>
 
 
-Ensemble::Ensemble(std::vector<Neuron> vector, double _d, double _sigma)
+Ensemble::Ensemble(double _sigma = 0.0, double _d = 0.0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>())
 {
-	connection = vector;
-	d = _d;
+	neurons = v;
+	connection = connect;
 	sigma = _sigma;
-}
-
-Ensemble::Ensemble(double _d, double _sigma)
-{
 	d = _d;
-	sigma = _sigma;
 }
 
-void Ensemble::addConnection(Neuron& newNeuron)
+std::vector<double> Ensemble::doTic(double dt)
 {
-	connection.push_back(newNeuron);
-}
+	std::vector<double> res;
 
-void Ensemble::doTic(double dt)
-{
-	double phase;
-	for (int i = 0; i < connection.size(); i++)
+	for(int i = 0; i < neurons.size(); i++)
 	{
-		connection[i].doTic(dt);
+		neurons[i].doTic(dt);
 		for (int j = 0; j < connection.size(); j++)
-		{
-			phase = connection[i].getNewPhase();
-			if (i != j)
-				if (i < j)
-					phase -= (d * connectionFuncDown(j) * dt);
-				else
-					phase -= (d * connectionFuncUp(j) * dt);
-			//while (phase > 2 * M_PI)
-				//phase -= 2 * M_PI;
-			connection[i].setNewPhase(phase);
-		}
+			if(connection[j].first == i)
+			{
+				double phase = neurons[i].getNewPhase();
+				phase -= d * connectionFunction(j) * dt;
+				neurons[i].setNewPhase(phase);
+			}
+		res.push_back(neurons[i].getNewPhase());
 	}
-}
-
-double Ensemble::der(int number)
-{
-	double res = 0;
-	//if (number < connection.size())
-		 res += func(connection[number].getParam(), connection[number].getNewPhase());
-		 for (int j = 0; j < connection.size(); j++)
-		 {
-			 if (number != j)
-				 if (number < j)
-					 res -= (d * connectionFuncDown(j));
-				 else
-					 res -= (d * connectionFuncUp(j));
-		 }
 	return res;
 }
 
-// double gateFunc()
-// {
-// 	return d;
-// }
-
-double Ensemble::connectionFuncDown(int number)
+void Ensemble::addConnection(std::pair<size_t, size_t> add)
 {
-
-	//std::cout << asin(connection[number].getParam()) << " " << connection[number].getNewPhase() << std::endl;
-	double phase = connection[number].getNewPhase();
-	while (phase > 2 * M_PI)
-		phase -= 2 * M_PI;
-	// if (((asin(connection[number].getParam()) - sigma) < phase) && ((asin(connection[number].getParam()) + sigma) > (phase)))
-	if (((M_PI / 2 - sigma) <= phase) && ((M_PI / 2 + sigma) >= phase))
-		return 0.0;
-	else 
-		return 1.0;
+	connection.push_back(add);
+	sort(connection.begin(), connection.end());
 }
 
-
-double Ensemble::connectionFuncUp(int number)
+void  Ensemble::addConnection(size_t number_in, size_t number_out)
 {
-	//std::cout << asin(connection[number].getParam()) << " " << connection[number].getNewPhase() << std::endl;
-	double phase = connection[number].getPhase();
-	while (phase > 2 * M_PI)
+	std::pair<size_t, size_t> added(number_in, number_out);
+	addConnection(added);
+}
+
+double Ensemble::connectionFunction(size_t connection_number)
+{
+	double phase = neurons[connection[connection_number].second].getNewPhase();
+	while(phase > 2 * M_PI)
 		phase -= 2 * M_PI;
-	//if (((asin(connection[number].getParam()) - sigma) < phase) && ((asin(connection[number].getParam()) + sigma) > (phase)))
+	// double out_neuron_w = neurons[connection[connection_number].second].getParam();
+	// if((asin(out_neuron_w - sigma) < phase) && (asin(out_neuron_w + sigma) > phase))
 	if (((M_PI / 2 - sigma) <= phase) && ((M_PI / 2 + sigma) >= phase))
+	{
+		// std::cout << "Ab" << std::endl;
 		return 0.0;
-	else 
+	}
+	else
+	{
+		// std::cout << "Ba" << std::endl;
 		return 1.0;
+	}
 }

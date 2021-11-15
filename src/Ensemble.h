@@ -1,27 +1,27 @@
-#pragma once
-
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "Neuron.h"
 #include <vector>
 
+
 class Ensemble
 {
 public:
-	std::vector<Neuron> connection;
-	double d;
+
+	std::vector<Neuron> neurons;
+
+	std::vector<std::pair< size_t, size_t> > connection;
+
 	double sigma;
 
-	Ensemble(std::vector<Neuron> vector, double, double);
-	Ensemble(double, double);
-	void addConnection(Neuron& newNeuron);
-	void doTic(double dt);
+	double d;
 
-	double der(int number);
+	Ensemble(double sigma, double d, std::vector<Neuron> v, std::vector<std::pair< size_t, size_t >> connect);
 
-	double connectionFuncDown(int number);
+	std::vector<double> doTic(double dt);
 
-	double connectionFuncUp(int number);
+	void addConnection(std::pair<size_t, size_t>);
+	void addConnection(size_t number_in, size_t number_out);
+
+	double connectionFunction(size_t connection_n);
 };
-
-double gateFunc();
