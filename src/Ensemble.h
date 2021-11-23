@@ -16,7 +16,7 @@ public:
 
 	double d;
 
-	Ensemble(double sigma, double d, std::vector<Neuron> v, std::vector<std::pair< size_t, size_t >> connect);
+	Ensemble(std::vector<Neuron> v, std::vector<std::pair< size_t, size_t >> connect);
 
 	std::vector<double> doTic(double dt);
 
@@ -24,4 +24,6 @@ public:
 	void addConnection(size_t number_in, size_t number_out);
 
 	double connectionFunction(size_t connection_n);
+
+	auto compute_ensemble(double _d, double _sigma, double max_time, double dt);
 };

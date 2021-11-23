@@ -1,22 +1,29 @@
 #include "Neuron.h"
 
-Neuron::Neuron(double phase_start, double param)
+Neuron::Neuron(double phase_start_, double param)
 {
+	phase_start = phase_start_;
 	phase = phase_start;
 	phaseNew = phase_start;
 	w = param;
 }
 
-Neuron::Neuron(const Neuron& copy)
-{
-	phase = copy.phase;
-	phaseNew = copy.phaseNew;
-	w = copy.w;
-}
+// Neuron::Neuron(const Neuron& copy)
+// {
+// 	phase = copy.phase;
+// 	phaseNew = copy.phaseNew;
+// 	w = copy.w;
+// }
 
 double Neuron::getPhase()
 {
 	return phase;
+}
+
+void Neuron::reset()
+{
+	phase = phase_start;
+	phaseNew = phase_start;
 }
 
 void Neuron::setPhase(double setedPhase)

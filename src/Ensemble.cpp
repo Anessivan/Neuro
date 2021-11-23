@@ -1,16 +1,18 @@
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include "Ensemble.h"
+
+#include <cmath>
+#include <vector>
+#include <tuple>
 #include <iostream>
 #include <algorithm>
 
+#define _USE_MATH_DEFINES
 
-Ensemble::Ensemble(double _sigma = 0.0, double _d = 0.0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>())
+Ensemble::Ensemble(std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>())
 {
 	neurons = v;
 	connection = connect;
-	sigma = _sigma;
-	d = _d;
+	sort(connection.begin(), connection.end());
 }
 
 std::vector<double> Ensemble::doTic(double dt)
@@ -61,4 +63,28 @@ double Ensemble::connectionFunction(size_t connection_number)
 		// std::cout << "Ba" << std::endl;
 		return 1.0;
 	}
+}
+
+auto Ensemble::compute_ensemble(double _d, double _sigma, double max_time = 100, double dt = 0.01)
+{
+	sigma = _sigma;
+	d = _d;
+
+	std::vector<double> time;
+	std::vector<std::vector<double>> neurons_phases(neurons.size());
+
+	for (size_t i = 0; i < neurons.size(); i++)
+		neurons[i].reset();
+
+	for (double t = 0; t < max_time; t += dt)
+	{
+		doTic(dt);
+		time.push_back(t);
+		for (size_t i = 0; i < neurons.size(); i++)
+		{
+			neurons_phases[i].push_back(neurons[i].getNewPhase());
+		}
+	}
+
+	return make_tuple(time, neurons_phases);
 }
