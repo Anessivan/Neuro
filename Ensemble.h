@@ -18,9 +18,11 @@ private:
 
 	double d;
 
+	double k;
+
 public:
 
-	Ensemble(double sigma = 0, double d = 0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>());
+	Ensemble(double sigma = 0, double d = 0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>(), double _k = -500.0);
 
 	std::vector<double> doTic(double dt);
 

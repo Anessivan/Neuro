@@ -5,12 +5,14 @@
 #include <algorithm>
 
 
-Ensemble::Ensemble(double _sigma = 0.0, double _d = 0.0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>())
+Ensemble::Ensemble(double _sigma = 0.0, double _d = 0.0, std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>(), double _k = -500.0)
 {
 	neurons = v;
 	connection = connect;
+	sort(connection.begin(), connection.end());
 	sigma = _sigma;
 	d = _d;
+	k = _k;
 }
 
 std::vector<double> Ensemble::doTic(double dt)
@@ -49,11 +51,8 @@ void  Ensemble::addConnection(size_t number_in, size_t number_out)
 double Ensemble::connectionFunction(size_t connection_number)
 {
 	double phase = neurons[connection[connection_number].second].getNewPhase();
-	while(phase > 2 * M_PI)
-		phase -= 2 * M_PI;
-	double out_neuron_w = neurons[connection[connection_number].second].getParam();
-	if((asin(out_neuron_w - sigma) < phase) && (asin(out_neuron_w + sigma) > phase))
-		return 0.0;
-	else
-		return 1.0;
+
+	double res = 1.0 / (1.0 + k * exp(cos(sigma) - sin(phase)));
+
+	return res;
 }
