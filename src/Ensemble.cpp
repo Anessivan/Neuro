@@ -49,26 +49,30 @@ void  Ensemble::addConnection(size_t number_in, size_t number_out)
 double Ensemble::connectionFunction(size_t connection_number)
 {
 	double phase = neurons[connection[connection_number].second].getNewPhase();
-	while(phase > 2 * M_PI)
-		phase -= 2 * M_PI;
-	// double out_neuron_w = neurons[connection[connection_number].second].getParam();
-	// if((asin(out_neuron_w - sigma) < phase) && (asin(out_neuron_w + sigma) > phase))
-	if (((M_PI / 2 - sigma) <= phase) && ((M_PI / 2 + sigma) >= phase))
-	{
-		// std::cout << "Ab" << std::endl;
-		return 0.0;
-	}
-	else
-	{
-		// std::cout << "Ba" << std::endl;
-		return 1.0;
-	}
+	double res = 1.0 / (1.0 + k * exp(cos(sigma) - sin(phase)));
+	// while(phase > 2 * M_PI)
+	// 	phase -= 2 * M_PI;
+	// // double out_neuron_w = neurons[connection[connection_number].second].getParam();
+	// // if((asin(out_neuron_w - sigma) < phase) && (asin(out_neuron_w + sigma) > phase))
+	// if (((M_PI / 2 - sigma) <= phase) && ((M_PI / 2 + sigma) >= phase))
+	// {
+	// 	// std::cout << "Ab" << std::endl;
+	// 	return 0.0;
+	// }
+	// else
+	// {
+	// 	// std::cout << "Ba" << std::endl;
+	// 	return 1.0;
+	// }
+
+	return res;
 }
 
-auto Ensemble::compute_ensemble(double _d, double _sigma, double max_time = 100, double dt = 0.01)
+auto Ensemble::compute_ensemble(double _d, double _sigma, double _k, double max_time = 100, double dt = 0.01)
 {
 	sigma = _sigma;
 	d = _d;
+	k = _k;
 
 	std::vector<double> time;
 	std::vector<std::vector<double>> neurons_phases(neurons.size());

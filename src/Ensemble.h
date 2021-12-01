@@ -13,8 +13,8 @@ public:
 	std::vector<std::pair< size_t, size_t> > connection;
 
 	double sigma;
-
 	double d;
+	double k;
 
 	Ensemble(std::vector<Neuron> v, std::vector<std::pair< size_t, size_t >> connect);
 
@@ -25,5 +25,5 @@ public:
 
 	double connectionFunction(size_t connection_n);
 
-	auto compute_ensemble(double _d, double _sigma, double max_time, double dt);
+	auto compute_ensemble(double _d, double _sigma, double _k, double max_time, double dt);
 };
