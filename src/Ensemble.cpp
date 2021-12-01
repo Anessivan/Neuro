@@ -49,7 +49,7 @@ void  Ensemble::addConnection(size_t number_in, size_t number_out)
 double Ensemble::connectionFunction(size_t connection_number)
 {
 	double phase = neurons[connection[connection_number].second].getNewPhase();
-	double res = 1.0 / (1.0 + k * exp(cos(sigma) - sin(phase)));
+	double res = 1.0 / (1.0 + exp(k * (cos(sigma) - sin(phase))));
 	// while(phase > 2 * M_PI)
 	// 	phase -= 2 * M_PI;
 	// // double out_neuron_w = neurons[connection[connection_number].second].getParam();
