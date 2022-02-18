@@ -8,25 +8,28 @@
 
 #define _USE_MATH_DEFINES
 
-Ensemble::Ensemble(std::vector<Neuron> v = std::vector<Neuron>(), std::vector<std::pair< size_t, size_t >> connect = std::vector<std::pair< size_t, size_t >>())
+Ensemble::Ensemble(std::vector<Neuron> _neurons = std::vector<Neuron>(), std::vector<Connection> _connections = std::vector<Connection>())
 {
-	neurons = v;
-	connection = connect;
-	sort(connection.begin(), connection.end());
+	neurons = _neurons;
+	connections = _connections;
+
+	sort(connections.begin(), connections.end(), compareConnectionsByIndexes);
 }
 
 std::vector<double> Ensemble::doTic(double dt)
 {
 	std::vector<double> res;
-
-	for(int i = 0; i < neurons.size(); i++)
+ 
+	for(size_t i = 0; i < neurons.size(); i++)
 	{
 		neurons[i].doTic(dt);
-		for (int j = 0; j < connection.size(); j++)
-			if(connection[j].first == i)
+		for (size_t j = 0; j < connections.size(); j++)
+			if(connections[j].neurons_indexes.first == i)
 			{
-				double phase = neurons[i].getNewPhase();
-				phase -= d * connectionFunction(j) * dt;
+				size_t connectedNeuronIndex = connections[j].neurons_indexes.second;
+				double connectedNeuronPhase =  neurons[connectedNeuronIndex].getNewPhase();
+				
+				double phase = neurons[i].getNewPhase() - connections[j].d * couplingFunction(connectedNeuronPhase) * dt;
 				neurons[i].setNewPhase(phase);
 			}
 		res.push_back(neurons[i].getNewPhase());
@@ -34,44 +37,24 @@ std::vector<double> Ensemble::doTic(double dt)
 	return res;
 }
 
-void Ensemble::addConnection(std::pair<size_t, size_t> add)
+void Ensemble::addConnection(Connection connection)
 {
-	connection.push_back(add);
-	sort(connection.begin(), connection.end());
+	connections.push_back(connection);
+
+	sort(connections.begin(), connections.end(), compareConnectionsByIndexes);
 }
 
-void  Ensemble::addConnection(size_t number_in, size_t number_out)
+
+double Ensemble::couplingFunction(double phase)
 {
-	std::pair<size_t, size_t> added(number_in, number_out);
-	addConnection(added);
+	// double phase = neurons[connection[connection_number].second].getNewPhase();
+
+	return 1.0 / (1.0 + exp(k * (cos(sigma) - sin(phase))));
 }
 
-double Ensemble::connectionFunction(size_t connection_number)
-{
-	double phase = neurons[connection[connection_number].second].getNewPhase();
-	double res = 1.0 / (1.0 + exp(k * (cos(sigma) - sin(phase))));
-	// while(phase > 2 * M_PI)
-	// 	phase -= 2 * M_PI;
-	// // double out_neuron_w = neurons[connection[connection_number].second].getParam();
-	// // if((asin(out_neuron_w - sigma) < phase) && (asin(out_neuron_w + sigma) > phase))
-	// if (((M_PI / 2 - sigma) <= phase) && ((M_PI / 2 + sigma) >= phase))
-	// {
-	// 	// std::cout << "Ab" << std::endl;
-	// 	return 0.0;
-	// }
-	// else
-	// {
-	// 	// std::cout << "Ba" << std::endl;
-	// 	return 1.0;
-	// }
-
-	return res;
-}
-
-auto Ensemble::compute_ensemble(double _d, double _sigma, double _k, double max_time = 100, double dt = 0.01)
+auto Ensemble::computeEnsemble(double _sigma, double _k, double max_time = 100, double dt = 0.01)
 {
 	sigma = _sigma;
-	d = _d;
 	k = _k;
 
 	std::vector<double> time;

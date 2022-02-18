@@ -21,9 +21,11 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(ensemble, m)
 {
+	py::class_<Connection>(m, "Connection")
+		.def(py::init<pair<unsigned int, unsigned int>, double>());
 	py::class_<Neuron>(m, "Neuron")
 		.def(py::init<double, double>());
 	py::class_<Ensemble>(m, "Ensemble")
-		.def(py::init<vector<Neuron>, vector<pair<size_t, size_t>>>())
-		.def("compute", &Ensemble::compute_ensemble);
+		.def(py::init<vector<Neuron>, vector<Connection>>())
+		.def("compute", &Ensemble::computeEnsemble);
 }

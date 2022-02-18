@@ -1,5 +1,5 @@
 import pybind11
-from setuptools._distutils.core import setup, Extension
+from distutils.core import setup, Extension
 
 ext_modules = [
     Extension(
@@ -20,5 +20,5 @@ setup(
     # description='numerical methods extension',
     ext_modules=ext_modules,
     requires=['pybind11'],  # Указываем зависимость от pybind11
-    # package_dir = {'': ''}
+    package_dir = {'': ''}
 )
