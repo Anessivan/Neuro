@@ -8,10 +8,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '3.x'
-        cache: 'pip'
     - name: Install dependencies
       run: pip install pybind11
     - name: Build
