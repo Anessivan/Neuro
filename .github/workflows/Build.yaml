@@ -1,0 +1,18 @@
+name: CI
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+        cache: 'pip'
+    - name: Install dependencies
+      run: pip install pybind11
+    - name: Build
+      run: python setup.py build build_ext -f -i
