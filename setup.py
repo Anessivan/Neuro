@@ -20,5 +20,4 @@ setup(
     # description='numerical methods extension',
     ext_modules=ext_modules,
     requires=['pybind11'],  # Указываем зависимость от pybind11
-    package_dir = {'': ''}
 )
