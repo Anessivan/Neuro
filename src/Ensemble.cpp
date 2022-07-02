@@ -23,8 +23,8 @@ std::vector<double> Ensemble::doTic(double dt)
 	for(size_t i = 0; i < neurons.size(); i++)
 	{
 		neurons[i].doTic(dt);
-		double phase_changes;
-		int input_n;
+		double phase_changes = 0;
+		int input_n = 0;
 		for (size_t j = 0; j < connections.size(); j++)
 			if(connections[j].neurons_indexes.first == i)
 				if(connections[j].d != 0)
@@ -35,9 +35,12 @@ std::vector<double> Ensemble::doTic(double dt)
 					phase_changes += connections[j].d * couplingFunction(connectedNeuronPhase) * dt;
 					input_n++;
 				}
-		phase_changes = phase_changes / input_n;
-		double phase = neurons[i].getNewPhase() + phase_changes;
-		neurons[i].setNewPhase(phase);
+		if(input_n != 0)
+		{
+			phase_changes = phase_changes / input_n;
+			double phase = neurons[i].getNewPhase() + phase_changes;
+			neurons[i].setNewPhase(phase);
+		}
 		res.push_back(neurons[i].getNewPhase());
 	}
 	
