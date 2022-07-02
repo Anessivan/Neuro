@@ -19,21 +19,28 @@ Ensemble::Ensemble(std::vector<Neuron> _neurons = std::vector<Neuron>(), std::ve
 std::vector<double> Ensemble::doTic(double dt)
 {
 	std::vector<double> res;
- 
+ 	
 	for(size_t i = 0; i < neurons.size(); i++)
 	{
 		neurons[i].doTic(dt);
+		double phase_changes;
+		int input_n;
 		for (size_t j = 0; j < connections.size(); j++)
 			if(connections[j].neurons_indexes.first == i)
-			{
-				size_t connectedNeuronIndex = connections[j].neurons_indexes.second;
-				double connectedNeuronPhase =  neurons[connectedNeuronIndex].getNewPhase();
+				if(connections[j].d != 0)
+				{
+					size_t connectedNeuronIndex = connections[j].neurons_indexes.second;
+					double connectedNeuronPhase =  neurons[connectedNeuronIndex].getNewPhase();
 				
-				double phase = neurons[i].getNewPhase() - connections[j].d * couplingFunction(connectedNeuronPhase) * dt;
-				neurons[i].setNewPhase(phase);
-			}
+					phase_changes += connections[j].d * couplingFunction(connectedNeuronPhase) * dt;
+					input_n++;
+				}
+		phase_changes = phase_changes / input_n;
+		double phase = neurons[i].getNewPhase() + phase_changes;
+		neurons[i].setNewPhase(phase);
 		res.push_back(neurons[i].getNewPhase());
 	}
+	
 	return res;
 }
 
