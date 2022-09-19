@@ -27,7 +27,10 @@ public:
 	double d;
 	double k;
 
-	Ensemble(std::vector<Neuron>, std::vector<Connection>);
+	Ensemble(
+		std::vector<Neuron> = std::vector<Neuron>(), 
+		std::vector<Connection> = std::vector<Connection>()
+	);
 
 	void doTic(double dt);
 

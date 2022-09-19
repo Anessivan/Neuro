@@ -8,7 +8,7 @@
 
 #define _USE_MATH_DEFINES
 
-Ensemble::Ensemble(std::vector<Neuron> _neurons = std::vector<Neuron>(), std::vector<Connection> _connections = std::vector<Connection>())
+Ensemble::Ensemble(std::vector<Neuron> _neurons, std::vector<Connection> _connections)
 {
 	neurons = _neurons;
 	connections = _connections;
