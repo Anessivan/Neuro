@@ -2,4 +2,5 @@
 *.pyd
 *.ipynb
 *.pdf
+*.egg-info
 build
