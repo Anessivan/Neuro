@@ -12,7 +12,7 @@ struct Connection
 
 bool compareConnectionsByIndexes(const Connection &a, const Connection &b)
 {
-	return a.neurons_indexes < b.neurons_indexes;
+	return a.neurons_indexes.first < b.neurons_indexes.first;
 }
 
 class Ensemble
@@ -27,11 +27,12 @@ public:
 	double d;
 	double k;
 
-	Ensemble(std::vector<Neuron>, std::vector<Connection>);
+	Ensemble(
+		std::vector<Neuron> = std::vector<Neuron>(), 
+		std::vector<Connection> = std::vector<Connection>()
+	);
 
-	std::vector<double> doTic(double dt);
-
-	void addConnection(Connection);
+	void doTic(double dt);
 
 	double couplingFunction(double);
 

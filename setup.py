@@ -6,7 +6,7 @@ ext_modules = [
         'ensemble', 
         ['src/Source.cpp'], 
         include_dirs=[pybind11.get_include()],  
-        language='c++', 
+        language='c++',
         extra_compile_args=['-std=c++17'],
         extra_link_args=[]
     ),
@@ -14,7 +14,7 @@ ext_modules = [
 
 setup(
     name='ensemble', 
-    version='1.0.1',
+    version='1.1.0',
     ext_modules=ext_modules,
     requires=['pybind11'],  
 )
